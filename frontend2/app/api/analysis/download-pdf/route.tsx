@@ -108,14 +108,18 @@ export async function GET(request: NextRequest) {
     }
 
     // Generate PDF
-    const pdfElement = React.createElement(PDFReportTemplate, { data: pdfData })
-    const pdfBuffer = await renderToBuffer(pdfElement)
+    const pdfBuffer = await renderToBuffer(
+      <PDFReportTemplate data={pdfData} />
+    )
 
     // Create filename
     const filename = `FinCare_Analysis_${application.business_name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`
 
+    // Convert Buffer to Uint8Array for NextResponse
+    const pdfBytes = new Uint8Array(pdfBuffer)
+
     // Return PDF as download
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(pdfBytes, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${filename}"`,

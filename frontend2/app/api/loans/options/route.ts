@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
       }
 
       return {
-        id: product.id,
+        id: String(product.id),
         bankName: product.bank_name,
         productName: product.product_name,
         interestRate: product.interest_rate_range,

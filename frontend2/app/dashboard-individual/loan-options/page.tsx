@@ -11,7 +11,7 @@ import Link from "next/link"
 
 const mockIndividualLoanOptions = [
   {
-    id: 1,
+    id: "1",
     bankName: "Vietcombank",
     productName: "Personal Loan Plus",
     interestRate: "12% - 15%",
@@ -22,7 +22,7 @@ const mockIndividualLoanOptions = [
     features: ["No collateral required", "Quick approval in 24 hours", "Flexible repayment", "Competitive rates"],
   },
   {
-    id: 2,
+    id: "2",
     bankName: "Techcombank",
     productName: "Vehicle Financing",
     interestRate: "10% - 13%",
@@ -33,7 +33,7 @@ const mockIndividualLoanOptions = [
     features: ["Up to 80% financing", "Fast disbursement", "Competitive interest rates", "Flexible down payment"],
   },
   {
-    id: 3,
+    id: "3",
     bankName: "BIDV",
     productName: "Home Loan",
     interestRate: "8% - 11%",
@@ -44,7 +44,7 @@ const mockIndividualLoanOptions = [
     features: ["Long repayment terms", "Low interest rates", "Up to 70% LTV", "Grace period available"],
   },
   {
-    id: 4,
+    id: "4",
     bankName: "VPBank",
     productName: "Quick Cash Loan",
     interestRate: "15% - 18%",
