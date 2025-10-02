@@ -5,6 +5,8 @@ import { renderToBuffer } from '@react-pdf/renderer'
 import { PDFReportTemplate } from '@/components/analysis/pdf-report-template'
 import React from 'react'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()

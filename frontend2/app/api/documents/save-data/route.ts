@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+export const dynamic = 'force-dynamic'
+
 // Helper to compute financial metrics from document data
 function computeFinancialMetrics(documentData: any) {
   const metrics: any = {

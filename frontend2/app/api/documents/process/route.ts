@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import Papa from 'papaparse'
 
+export const dynamic = 'force-dynamic'
+
 // Helper function to extract financial metrics from parsed CSV data
 function extractFinancialMetrics(csvData: any[], category: string) {
   const metrics: any = {
