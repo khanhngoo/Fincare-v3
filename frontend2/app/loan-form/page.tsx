@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Slider } from "@/components/ui/slider"
 import { ArrowRight, ArrowLeft, Upload, Building2, User } from "lucide-react"
+import { clearLoanOptionsCache } from "@/lib/cache-utils"
 
 const INDIVIDUAL_STEPS = [
   { id: "personal", title: "Personal Information", section: "Step 1" },
@@ -95,6 +96,9 @@ export default function LoanFormPage(): ReactElement {
       // Store application ID and baseline score
       localStorage.setItem('currentApplicationId', data.application.id)
       setBaselineScore(data.baselineScore)
+
+      // Clear any existing loan options cache since we have a new application
+      clearLoanOptionsCache()
 
       // Redirect to loan options with application ID
       router.push(`/dashboard/loan-options?applicationId=${data.application.id}`)

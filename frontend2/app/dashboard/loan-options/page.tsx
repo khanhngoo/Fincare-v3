@@ -1,17 +1,16 @@
 "use client"
 
-export const dynamic = 'force-dynamic'
-
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useSearchParams } from "next/navigation"
 import { LoanOptionCard } from "@/components/cards/loan-option-card"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Filter, SlidersHorizontal, Grid3x3, TableIcon } from "lucide-react"
+import { Filter, SlidersHorizontal, Grid3x3, TableIcon, RefreshCw } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import Image from "next/image"
+import { getCachedLoanOptions, setCachedLoanOptions } from "@/lib/cache-utils"
 
 interface LoanOption {
   id: string
@@ -106,39 +105,82 @@ const mockLoanOptions_OLD = [
 
 export default function LoanOptionsPage() {
   const searchParams = useSearchParams()
-  const applicationId = searchParams.get('applicationId') || localStorage.getItem('currentApplicationId')
+  const applicationId = searchParams.get('applicationId') || (typeof window !== 'undefined' ? localStorage.getItem('currentApplicationId') : null)
 
   const [loanOptions, setLoanOptions] = useState<LoanOption[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid")
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
-  useEffect(() => {
-    async function fetchLoanOptions() {
+  const fetchLoanOptions = useCallback(async (forceRefresh: boolean = false) => {
       if (!applicationId) {
         setError('No application ID found. Please submit a loan application first.')
         setLoading(false)
         return
       }
 
+      // Check cache first (unless forcing refresh)
+      if (!forceRefresh) {
+        const cachedData = getCachedLoanOptions(applicationId)
+        if (cachedData) {
+          console.log('Loading loan options from cache')
+          setLoanOptions(cachedData)
+          setLoading(false)
+          return
+        }
+      }
+
       try {
+        console.log('Fetching loan options from API for application:', applicationId)
         const response = await fetch(`/api/loans/options?applicationId=${applicationId}`)
-        const data = await response.json()
+
+        console.log('Response status:', response.status)
 
         if (!response.ok) {
-          throw new Error(data.error || 'Failed to fetch loan options')
+          const data = await response.json()
+
+          if (response.status === 401) {
+            console.error('Authentication error - user not logged in')
+            setError('Please log in to view loan options.')
+          } else if (response.status === 500) {
+            console.error('Server error:', data.error)
+            setError('Server error. Please check that loan products are set up in the database.')
+          } else {
+            console.error('API error:', data.error)
+            setError(data.error || 'Failed to fetch loan options')
+          }
+          setLoading(false)
+          return
+        }
+
+        const data = await response.json()
+        console.log('Loan options received:', data.loans?.length || 0, 'products')
+
+        // Store in cache
+        if (data.loans && data.loans.length > 0) {
+          setCachedLoanOptions(applicationId, data.loans)
         }
 
         setLoanOptions(data.loans || [])
       } catch (err: any) {
+        console.error('Error fetching loan options:', err)
         setError(err.message || 'Failed to load loan options')
       } finally {
         setLoading(false)
+        setIsRefreshing(false)
       }
-    }
-
-    fetchLoanOptions()
   }, [applicationId])
+
+  useEffect(() => {
+    fetchLoanOptions()
+  }, [fetchLoanOptions])
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    setError(null)
+    await fetchLoanOptions(true)
+  }
 
   const getScoreBadge = (score: number) => {
     if (score >= 80) return { label: "Excellent", variant: "default" as const, color: "bg-primary" }
@@ -208,6 +250,16 @@ export default function LoanOptionsPage() {
                   Table
                 </Button>
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 bg-transparent"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+              >
+                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                {isRefreshing ? 'Refreshing...' : 'Refresh'}
+              </Button>
               <Button variant="outline" size="sm" className="gap-2 bg-transparent">
                 <Filter className="h-4 w-4" />
                 Filter

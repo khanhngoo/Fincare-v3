@@ -1,0 +1,75 @@
+
+> my-v0-project@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.25
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (114kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Compiled with warnings
+
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+A Node.js API is used (process.versions at line: 35) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+./node_modules/@supabase/realtime-js/dist/module/index.js
+./node_modules/@supabase/supabase-js/dist/module/index.js
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+./node_modules/@supabase/supabase-js/dist/module/index.js
+A Node.js API is used (process.version at line: 24) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/supabase-js/dist/module/index.js
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+ ✓ Compiled successfully
+   Skipping linting
+   Checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/15) ...
+   Generating static pages (3/15) 
+   Generating static pages (7/15) 
+   Generating static pages (11/15) 
+ ✓ Generating static pages (15/15)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    176 B          94.4 kB
+├ ○ /_not-found                          876 B          88.3 kB
+├ ƒ /api/analysis/detailed-report        0 B                0 B
+├ ƒ /api/analysis/download-pdf           0 B                0 B
+├ ƒ /api/analysis/generate-report        0 B                0 B
+├ ƒ /api/documents/process               0 B                0 B
+├ ƒ /api/documents/save-data             0 B                0 B
+├ ƒ /api/documents/upload                0 B                0 B
+├ ƒ /api/loans/calculate-baseline        0 B                0 B
+├ ƒ /api/loans/options                   0 B                0 B
+├ ○ /auth/sign-in                        2.35 kB         105 kB
+├ ○ /dashboard-individual/analysis       2.17 kB         218 kB
+├ ○ /dashboard-individual/loan-options   2.12 kB         114 kB
+├ ○ /dashboard/analysis                  3.32 kB         219 kB
+├ ○ /dashboard/documents                 25.5 kB         148 kB
+├ ○ /dashboard/documents/demo            3.98 kB         100 kB
+├ ○ /dashboard/loan-options              2.1 kB          114 kB
+├ ○ /loan-form                           17.3 kB         135 kB
+├ ○ /login                               3.44 kB         151 kB
+└ ○ /register                            3.9 kB          151 kB
++ First Load JS shared by all            87.4 kB
+  ├ chunks/117-99fff06fe49d51d0.js       31.8 kB
+  ├ chunks/fd9d1056-40b17256bdb832d4.js  53.6 kB
+  └ other shared chunks (total)          2.01 kB
+
+
+ƒ Middleware                             63.8 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
